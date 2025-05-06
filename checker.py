@@ -2,6 +2,7 @@ import datetime
 import re  
 
 OUTPUT_FILE = "./checking_password_log.txt"
+INPUT_FILE = "./common_passwords.txt"
 
 
 def get_current_datetime_formatted():
@@ -10,8 +11,10 @@ def get_current_datetime_formatted():
 
 
 def read_in_file(filename):
-    with open(filename, "r") as f:
-            return f.read()
+    with open(filename, "r", encoding="utf-8") as f:
+        lines = f.read()
+        lines = lines.split("\n")
+        return lines
     
 
 PASSWORD_CRITERIA = {
@@ -29,6 +32,12 @@ def is_strong_password(password):
             return False
     return True
 
+def password_duplicate(file, password):#check if password is common
+    passwords = read_in_file(file)
+    if password in passwords:
+        print(f"Password is in file")
+
+
 
 def get_password_strength(password):
     conditions_passed = 0
@@ -43,13 +52,15 @@ def get_password_strength(password):
     else:
         return "Weak"
 
+def timestamp():
+    with open(OUTPUT_FILE, "a", encoding="utf-8") as f:
+            f.write(f"{get_current_datetime_formatted()}\n")
+
 
 def get_password_from_user():
     while True:  # Loop until a strong password is entered
         password = input("Please enter your password: ")
-
-        with open(OUTPUT_FILE, "a", encoding="utf-8") as f:
-            f.write(f"{get_current_datetime_formatted()}\n")
+        timestamp()
 
         strength = get_password_strength(password)
         print(f"Password strength: {strength}")
@@ -62,7 +73,9 @@ def get_password_from_user():
 
 
 # Read in the poor passwords (replace with actual implementation)
-poor_passwords = read_in_file(OUTPUT_FILE)
+
+poor_passwords = read_in_file(INPUT_FILE)
+print(poor_passwords)
 
 # Main execution
-get_password_from_user()
+#get_password_from_user()
